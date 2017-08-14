@@ -1,0 +1,323 @@
+http://ruby-doc.org/core-2.2.0/doc/syntax/literals_rdoc.html
+strong/dynamic typing
+
+.inspect on a ruby object to get the REPL output
+also SomeClass.instance_methods
+also someInstance.respond_to?("to_s")
+
+Comparing strings, == vs. eql? - former is Java equals(), latter is Java ==
+The spaceship (<=>) method can be used to compare two strings in relation to their alphabetical ranking
+=== is the set membership query operator
+https://stackoverflow.com/questions/4467538/what-does-the-operator-do-in-ruby
+
+Parentheses are optional, commas are not, except when using percent literals:
+https://en.wikibooks.org/wiki/Ruby_Programming/Syntax/Literals#The_.25_Notation
+http://www.sampierson.com/articles/ruby-percent-literals
+http://ruby-doc.org/core-2.2.0/doc/syntax/literals_rdoc.html#label-Percent+Strings
+
+block:
+{ |x| x * x }
+proc:
+proc { |x| x * x }
+lambda:
+lambda { |x| x * x }
+
+also `{}` is equivalent to `do end`
+
+Too many operator overloads:
+p = proc {|x, y| "#{x}#{y}"}
+then any of these are the same:
+puts p.call("foo","bar")
+puts p::("foo","bar")
+puts p.("foo","bar")
+puts p["foo","bar"]
+https://www.sitepoint.com/closures-ruby/
+
+MORE ways to create a proc!
+-> { 1 + 1 }
+->(v) { 1 + v }
+
+Also, you need an explicit block to proc converter: &
+as a method arg, &p converts p into a proc
+for methods that need blocks, a.map(&p)  // turns p into a block
+
+Keyword arguments:
+def deliver(from: "A", to: nil, via: "mail")
+  "Sending from #{from} to #{to} via #{via}."  // variable escapes are called "interpolation"
+end
+
+field prefixes:
+$ - global
+@ - member
+@@ - class
+
+class fields are synthesized:
+attr_accessor :instance_var
+attr_reader, attr_writer, or attr_accessor
+You can also define your own accessor functions (perhaps to perform validation, or to handle derived attributes). The read accessor is simply a method that takes no parameters, and the assignment accessor is a method name ending in = that takes a single parameter. Although there can be no space between the method name and the = in the method definition, you can insert spaces there when you call the method, making it look like any other assignment. You can also utilize self assignments such as += and -=, as long as the corresponding + or - methods are defined.
+
+Constants are CamelCase, although some coventions still use SHOUTING_SNAKE_CASE
+
+public, protected same as Java, private ONLY allows self access (ruby doc is wrong about Java protected access).
+using the public/protected/private keywords are like C++, they apply until another one is seen or the scope ends.
+
+Can alias methods (yuck):
+alias hour hours
+
+There's a default hook for missing methods:
+# id is the name of the method called, the * syntax collects
+# all the arguments in an array named 'arguments'
+def method_missing(id, *arguments)
+  puts "Method #{id} was called, but not found. It has " +
+       "these arguments: #{arguments.join(", ")}"
+end
+
+There's a default hook for method calling:
+# This
+1 + 2
+# Is the same as this ...
+1.+(2)
+# Which is the same as this:
+1.send "+", 2
+
+Simliarly:
+method(:puts).call "puts is an object!"
+# => puts is an object!
+
+Array:
+[1, 2, 3]
+
+Hash:
+{ a: 1, b: 2 }  // with symbols
+{ "a" => 1, "b" => 2 }
+
+Range:
+(1..2)  # includes its ending value
+(1...2) # excludes its ending value
+
+Regex:
+/my regular expression/i
+
+Conversion:
+to_s, to_i, to_a to string, int, array
+
+Exceptions:
+begin
+  statements which may raise exceptions
+rescue [exception class names]
+  statements when an exception occurred
+rescue [exception class names]
+  statements when an exception occurred
+ensure
+  statements that will always run
+end
+If no exception class is designated for a rescue clause, StandardError exception is implied, and exceptions which are in a is_a? relation to StandardError are captured.
+This expression returns the value of the begin clause.
+The latest exception is accessed by the global variable $! (and so its type can be determined using $!.type).
+
+Rescue Exception for capturing errors, log, then reraise
+https://stackoverflow.com/a/10048406
+
+Ruby do-while loop:
+i = 0
+begin
+  puts "i = #{i}"
+  i += 1
+end until i > 4
+
+How to access the value of a symbol (kinda like reflection):
+a = "This is the content of `a'"
+b = eval("#{:a}")
+a.object_id == b.object_id  # => true
+
+Almost all classes in Ruby are derived from class Object. The definition of class Object mixes in the methods defined in the Kernel module.
+
+Holy crap:
+A class can be defined repeatedly. Each definition is added to the last definition. If a method is redefined, the former one is overridden and lost.
+<< is the array append operator, but you can use it to modify classes.
+class Entity
+  @instances = 0
+  class << self
+    attr_accessor :instances  # provide class methods for reading/writing
+  end
+end
+
+A singleton method of a class object is called a class method.
+this is basically a static method.
+class Foo
+  def self.test
+    "this is foo"
+  end
+end
+# It is invoked this way.
+Foo.test  # => "this is foo"
+
+Anonymous inner classes:
+class Foo
+  def hello
+    "hello"
+  end
+end
+class << foo
+  attr_accessor :name
+
+  def hello
+    "hello, I'm #{name}"
+  end
+end
+
+Modules:
+module Test
+  def thing
+    # ...
+  end
+  module_function :thing
+end
+
+Using the Comparison module as a mixin:
+class Animal
+  include Comparable
+
+  attr_reader :legs
+
+  def initialize(name, legs)
+    @name, @legs = name, legs
+  end
+
+  def <=>(other)
+    legs <=> other.legs
+  end
+
+  def inspect
+    @name
+  end
+end
+
+c = Animal.new("cat", 4)
+s = Animal.new("snake", 0)
+p = Animal.new("parrot", 2)
+
+c < s             # => false
+s < c             # => true
+p >= s            # => true
+p.between?(s, c)  # => true
+[p, s, c].sort    # => [snake, parrot, cat]
+
+When reading a file:
+$. // the current line number
+The special constant ARGF is a file-like object that can be used to read all the input files specified on the command line
+
+File closing:
+# (1)
+f = File.open("file")
+begin
+  f.each {|line| print line }
+ensure
+  f.close
+end
+
+# (2)
+File.open("file") do |f|
+  f.each {|line| print line }
+end
+
+# (3)
+File.foreach("file") {|line| print line }
+
+# (4)
+File.readlines("file").each {|line| print line }
+
+Basically the ruby doc has all kinds of use cases:
+https://www.ruby-lang.org/en/documentation/faq/9/
+
+Marshal for object serialization
+http://ruby-doc.org/stdlib-2.0.0/libdoc/json/rdoc/JSON.html
+
+Apart from these cases, you can access class and module constants using the :: operator, ModuleName::CONST1 or ClassName::CONST2.
+
+Varargs:
+def foo(prefix, *all)
+which creates an array:
+all.each do |element|
+
+Default values:
+def greet(p1="hello", p2="world")
+
+Ruby debugger:
+ruby -r debug your_program
+
+
+if
+elsif
+end
+
+
+on __FILE__ == $0
+https://stackoverflow.com/a/4687708
+# Only run the following code when this file is the main file being run
+# instead of having been required or loaded by another file
+if __FILE__==$0
+  # Find the parent directory of this file and add it to the front
+  # of the list of locations to look in when using require
+  $:.unshift File.expand_path("../../", __FILE__)  
+end
+Note that this particular practice (adding to the LOAD_PATH directory) is not usually necessary with the advent of require_relative, and expand_path is a simpler way of finding the parent directory.
+
+require_relative complements the builtin method require by allowing you to load a file that is relative to the file containing the require_relative statement.
+
+A scripty-thing I always forget:  use join:
+# Say bye to everybody
+def say_bye
+  if @names.nil?
+    puts "..."
+  elsif @names.respond_to?("join")
+    # Join the list elements with commas
+    puts "Goodbye #{@names.join(", ")}.  Come back soon!"
+  else
+    puts "Goodbye #{@names}.  Come back soon!"
+  end
+end
+
+"This method of not caring about the actual type of a variable, just relying on what methods it supports is known as 'Duck Typing'"
+
+Coercion - some kind of super complicated overloading:
+https://www.mutuallyhuman.com/blog/2011/01/25/class-coercion-in-ruby
+
+JRuby is faster than CRuby but has actual concurrency, which can expose concurrency errors.
+
+switch is a "case/when":
+puts case a
+when 1..5
+  "It's between 1 and 5"
+when 6
+  "It's 6"
+when String
+  "You passed a string"
+else
+  "You gave me #{a} -- I have no idea what to do with that."
+end
+
+
+Double splat operator is for hashes:
+That is the double splat operator which is available since Ruby 2.0.
+It captures all keyword arguments (which can also be a simple hash, which was the idiomatic way to emulate keyword arguments before they became part of the Ruby language)
+def my_method(**options)
+  puts options.inspect
+end
+my_method(key: "value")
+simpler explanation:
+https://blog.simplificator.com/2015/03/20/ruby-and-the-double-splat-operator/
+
+This is how to create static methods:
+  class Dog
+    def self.class_method2
+      :another_way_to_write_class_methods
+    end
+  end
+
+  def test_you_can_use_self_instead_of_an_explicit_reference_to_dog
+    assert_equal __, Dog.class_method2
+  end
+
+Style Guide (see naming):
+https://github.com/github/rubocop-github/blob/master/STYLEGUIDE.md

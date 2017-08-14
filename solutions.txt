@@ -1,0 +1,156 @@
+-----------------------------
+  Instrumentation/Profiling
+-----------------------------
+
+StatsD client for Ruby apps:
+https://github.com/Shopify/statsd-instrument
+StatsD: A network daemon that runs on the Node.js platform and listens for statistics, like counters and timers, sent over UDP or TCP and sends aggregates to one or more pluggable backend services (e.g., Graphite).
+https://github.com/etsy/statsd
+Graphite:
+http://graphite.readthedocs.io/en/latest/
+
+Practical Guide to StatsD/Graphite Monitoring
+https://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
+
+Coda Hale/Yammer/Dropwizard style metrics:
+https://github.com/johnewart/ruby-metrics
+
+JRuby:
+https://github.com/jruby/jruby/wiki/Profiling-JRuby
+also, if JRuby, we have access to VisualVM:
+https://blog.engineyard.com/2010/monitoring-memory-with-jruby-part-1-jhat-and-visualvm
+
+MRI Ruby:
+https://github.com/ruby-prof/ruby-prof
+https://github.com/tmm1/perftools.rb
+https://github.com/tmm1/stackprof
+  http://blog.scoutapp.com/articles/2015/09/16/profiling-rails-with-stackprof
+
+Manually:
+http://crypt.codemancers.com/posts/2015-04-15-diy-ruby-cpu-profiling-part-iii/
+
+ActiveSupport in Rails:
+http://guides.rubyonrails.org/active_support_instrumentation.html
+
+
+----------------------------
+  Global Exception Capture
+----------------------------
+
+Sentry:
+Appears to have widespread support:
+https://github.com/getsentry/sentry
+https://sentry.io/welcome/?utm_source=stackshare&utm_medium=cpc&utm_campaign=stackshare-september
+  https://github.com/getsentry/raven-ruby
+plus Sentry is free if used from source (BSD):
+  https://github.com/getsentry/sentry/blob/master/LICENSE
+https://docs.sentry.io/clients/ruby/integrations/
+
+Sentry over Airbrake:
+https://www.quora.com/Why-would-you-use-Airbrake-over-Sentry
+
+The open source error catcher that's Airbrake API compliant
+https://github.com/errbit/errbit
+Get notified of your Rails app exceptions with Errbit (app side)
+http://blog.8thcolor.com/en/2014/02/get-notified-of-your-rails-app-exceptions-with-errbit/
+"Airbrake will be called for all unrescued exception. You can also decide to call it yourself, even if you do rescue an exception, to add your custom handling"
+
+http://blog.takipi.com/the-complete-guide-to-error-tracking-tools-rollbar-vs-raygun-vs-sentry-vs-airbrake-vs-bugsnag-vs-overops/
+
+Sinatra, how to log errors globally:
+https://stackoverflow.com/questions/8475792/global-rescue-and-logging-exceptions-in-sinatra?rq=1
+More:
+https://stackoverflow.com/questions/25299186/sinatra-error-handling-in-ruby?rq=1
+
+-- It's probably a good idea to send a "ping" error once an hour to test that error reporting is working
+  https://github.com/getsentry/raven-ruby/issues/202
+  "I set config.action_dispatch.show_exceptions = true in the environment file and errors are being sent now."
+
+https://stackoverflow.com/a/10052064
+
+Simple Error Logging Anywhere In Your Code (using ThreadLocals)
+https://www.sitepoint.com/ruby-error-handling-beyond-basics/
+
+
+-----------
+   Pager
+-----------
+https://github.com/ustream/openduty
+Openduty is an incident escalation tool, just like Pagerduty.
+
+
+-------------------------------
+  Database Connection Pooling
+-------------------------------
+The calculation of pool size in order to avoid deadlock is a fairly simple resource allocation formula:
+   pool size = Tn x (Cm - 1) + 1
+Where Tn is the maximum number of threads, and Cm is the maximum number of simultaneous connections held by a single thread.
+https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+
+
+---------------------------
+  Development Environment
+---------------------------
+VirtualBox:
+https://www.virtualbox.org/wiki/VirtualBox
+Vagrant:
+https://www.vagrantup.com
+Reasons for Vagrant:
+1. Set Up Multi-VM Networks with Ease ("Think of it as a scripting engine for VirtualBox.")
+2. Source Control
+3. Various Platforms
+https://superuser.com/a/588334
+https://24ways.org/2014/what-is-vagrant-and-why-should-i-care/
+
+For deployment:
+"Golden image first", "config scripts second"
+https://web.archive.org/web/20160412063608/http://www.agilesysadmin.net/imaging-or-configuration-management
+
+Exporting AWS AMIs:
+http://docs.aws.amazon.com/vm-import/latest/userguide/vmexport.html
+https://aws.amazon.com/ec2/vm-import/
+http://diogomelo.net/blog/16/export-amazon-ec2-instance-to-virtualbox
+
+
+--------------
+  Deployment
+--------------
+Using Nginx as a load balancer proxy:
+https://www.linode.com/docs/uptime/loadbalancing/use-nginx-as-a-front-end-proxy-and-software-load-balancer
+
+Maybe Nginx is not necessary if using Amazon's load balancer:
+https://www.nginx.com/blog/nginx-plus-amazon-elastic-load-balancer-aws/
+
+When to use Nginx vs. Apache:
+http://www.zdnet.com/article/when-to-use-nginx-instead-of-apache/
+
+One reason is to log requests, which rules out whether or not they get to the server (since nginx is more reliable)
+https://www.nginx.com/resources/wiki/community/why_use_it/
+
+Sinatra Recipes: Nginx Proxied to Unicorn
+http://recipes.sinatrarb.com/p/deployment/nginx_proxied_to_unicorn
+
+
+----------------------
+  Database Migration
+----------------------
+Flyway:
+https://flywaydb.org/
+
+Rails Migrations:
+http://edgeguides.rubyonrails.org/active_record_migrations.html
+
+
+---------
+  Other
+---------
+Redis: CLIENT SETNAME <client-name> is a good idea:
+https://www.tutorialspoint.com/redis/redis_server.htm
+
+When to use MongoDB (e.g. billing systems)
+https://dzone.com/articles/when-use-mongodb-rather-mysql
+
+Thread safety: Nobody Understands the GIL
+https://www.jstorimer.com/blogs/workingwithcode/8085491-nobody-understands-the-gil
+
+

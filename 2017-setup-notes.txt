@@ -1,0 +1,50 @@
+Ruby:
+https://www.ruby-lang.org/en/downloads/
+Windows:
+https://rubyinstaller.org/downloads/
+Note: looks like I also need the devkit for MinGW's GCC (even though I already have MinGW)
+Yes, this worked.  I simply put the new MinGW as the last line on the system Path:
+c:\Ruby22-x64\devkit\mingw\bin\
+
+https://stackoverflow.com/a/44406252
+First install bundler if you don't have it
+  `gem install bundler` or `sudo gem install bundler`
+if you don't have the required permissions. Bundler is a gem that manages gem dependencies.
+then you can follow the above instruction for creating the gemfile, after which you can issue the command
+  bundle install
+
+xx Aptana Studio appears to be dead, so just download Eclipse (Oxygen as of 2017):
+xx https://www.eclipse.org/downloads/
+xx and Help > Eclipse Marketplace... search for Ruby (DLTK)
+xx   https://marketplace.eclipse.org/content/ruby-dltk
+xx This plugin is also dead. And the Aptana 3 plugin is dead.
+xx Trying Intellij:
+xx RubyMine does not work for the Community Edition.
+xx This might work:
+xx https://stackoverflow.com/questions/11404760/cannot-install-aptana-plugin-on-eclipse-4-2
+
+Ok, here we go:
+https://github.com/aptana/studio3/releases
+https://stackoverflow.com/questions/25514458/cannot-install-aptana-studio-3-6-on-windows
+Installing Aptana Studio in passive mode bypasses the installation of Git for Windows and Node.js.
+Aptana_Studio_3_Setup_3.6.1 /passive /norestart
+(I am unsure whether Aptana Studio will work properly without those "prerequisites", but it appears to.)
+If you want a global installation in a specific directory, the command line is
+Aptana_Studio_3_Setup_3.6.1.exe /passive /norestart ALLUSERS=1 APPDIR=c:\apps\AptanaStudio
+https://stackoverflow.com/questions/41745407/aptana-studio-3-launch-error-failed-to-load-the-jni-shared-library-your-syste
+https://stackoverflow.com/questions/25782832/aptana-3-6-0-jre-error-in-windows-os
+Added to studio3.bat:
+set PRGF86=c:\Progra~2
+set PATH=%PRGF86%\Java\jre1.8.0_144;%PRGF86%\Java\jre1.8.0_144\bin;%PATH%;
+https://stackoverflow.com/questions/7676249/how-do-i-debug-a-rails-application-in-aptana-studio-3
+Install the ruby-debug-ide gem:
+gem install ruby-debug-ide
+
+
+http://bundler.io/
+https://www.reddit.com/r/ruby/comments/2qc7sx/anything_like_virtualenv_python_for_ruby/
+https://www.develves.net/blogs/asd/2016-03-17-using-virtual-environments-ruby-1/
+https://github.com/rbenv/rbenv/wiki/Why-rbenv%3F
+https://rvm.io/
+or this:
+https://github.com/postmodern/chruby

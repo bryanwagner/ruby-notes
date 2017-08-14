@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+
+gem 'sinatra', '~> 1.4'
+gem 'puma', '~> 3.0'
+gem 'redis', '~> 3.2'
+gem 'json'
