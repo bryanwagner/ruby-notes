@@ -40,6 +40,7 @@ https://stackoverflow.com/questions/7676249/how-do-i-debug-a-rails-application-i
 Install the ruby-debug-ide gem:
 gem install ruby-debug-ide
 
+gem install test-unit
 
 http://bundler.io/
 https://www.reddit.com/r/ruby/comments/2qc7sx/anything_like_virtualenv_python_for_ruby/
