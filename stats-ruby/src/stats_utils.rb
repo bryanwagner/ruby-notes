@@ -1,3 +1,5 @@
+require 'time'
+
 module StatsUtils
 
   FLOAT_PRECISION = 1e-6;

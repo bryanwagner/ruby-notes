@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative "../src/stats_utils"
+require_relative "../src/time_utils"
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
@@ -57,12 +58,6 @@ class StatsUtilsTest < Test::Unit::TestCase
     puts "test passed"
   end
 
-  def time &block
-    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)  # Process::CLOCK_REALTIME
-    yield
-    Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond) - start_time
-  end
-
   def mod_test_a(a, b)
     a % b
   end
@@ -90,13 +85,13 @@ class StatsUtilsTest < Test::Unit::TestCase
 
     puts "running tests: tests=#{tests}, iterations=#{iterations}, mod_method=#{:mod_test_a}"
     tests.times do
-      test_time = time { timed_test.call(:mod_test_a) }
+      test_time = TimeUtils.nanos { timed_test.call(:mod_test_a) }
       stats_a.add(test_time)
     end
     puts stats_a
     puts "running tests: tests=#{tests}, iterations=#{iterations}, mod_method=#{:mod_test_b}"
     tests.times do
-      test_time = time { timed_test.call(:mod_test_b) }
+      test_time = TimeUtils.nanos { timed_test.call(:mod_test_b) }
       stats_b.add(test_time)
     end
     puts stats_b
